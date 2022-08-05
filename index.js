@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 const axios = require('axios').default
-const { XMLParser } = require('fast-xml-parser')
+const xml = require('xml-parse')
 const { existsSync, mkdirSync, writeFileSync, readFileSync } = require('fs')
 const path = require('path')
 const colors = require('colors')
@@ -45,9 +45,9 @@ function add(rss) {
   axios
     .get(rss)
     .then((res) => {
-      const channel = findChannel(new XMLParser().parse(res.data))
-        .filter((i) => i)
-        .flat()[0]
+      const channel = getChannel(res.data)
+      console.log(channel)
+      return
       const { title, description, subtitle } = channel
       const index = getConfig()
       index[host] = { title, rss }
@@ -109,9 +109,7 @@ function get(number) {
   axios
     .get(rss)
     .then((res) => {
-      const channel = findChannel(new XMLParser().parse(res.data))
-        .filter((i) => i)
-        .flat()[0]
+      const channel = getChannel(res.data)
       const { item, entry } = channel
       const items = item || entry
       items.forEach((i, idx) => {
@@ -121,10 +119,15 @@ function get(number) {
     })
     .catch((error) => log(error))
 }
+function getChannel(data) {
+  return findChannel(xml.parse(data))
+    .filter((i) => i?.length > 0)
+    .flat()[0]['childNodes']
+}
 function findChannel(data) {
-  if (data.title) return data
-  return Object.entries(data).map(([key, val]) => {
-    if (typeof val === 'object' && !Array.isArray(val)) return findChannel(val)
+  if (data[0]?.innerXML?.includes('<title>')) return data
+  return data.map((item) => {
+    if (Array.isArray(item?.childNodes)) return findChannel(item?.childNodes)
   })
 }
 function log(str) {

@@ -13,6 +13,6 @@
   "dependencies": {
     "axios": "^0.27.2",
     "colors": "^1.4.0",
-    "fast-xml-parser": "^4.0.9"
+    "xml-parse": "^0.4.0"
   }
 }
