@@ -1,6 +1,6 @@
 {
   "name": "rssx",
-  "version": "1.0.4",
+  "version": "2.0.0",
   "description": "命令行查看管理订阅RSS Feeds",
   "main": "index.js",
   "bin": {
@@ -11,8 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.27.2",
     "colors": "^1.4.0",
-    "xml-parse": "^0.4.0"
+    "rss-parser-browser": "^2.2.2"
   }
 }
