@@ -24,7 +24,6 @@ switch (/^\d+$/.test(process.argv[2])) {
         help()
     }
 }
-
 function ls() {
   const index = getConfig()
   if (Object.keys(index).length > 0) {
