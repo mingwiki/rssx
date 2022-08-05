@@ -1,8 +1,29 @@
-const parser = require('rss-parser-browser').parseURL
+const parseURL = require('rss-parser-browser').parseURL
 const colors = require('colors')
 const { existsSync, writeFileSync, readFileSync } = require('fs')
 const path = require('path')
 const url = require('url')
+function get(number) {
+  if (!/^\d+$/.test(number)) {
+    log(`请输入index number`)
+    return
+  }
+  const index = getConfig()
+  if (Object.keys(index).length - 1 < number) {
+    log(`请输入正确的index number`)
+    return
+  }
+  const { feedUrl } = index[Object.keys(index)[number]]
+  parseURL(feedUrl, (err, parsed) => {
+    if (!err) {
+      const { entries } = parsed.feed
+      entries.forEach((i, idx) => {
+        log(`${idx + 1}  ${i.title} `)
+        log(`> ${i.link} `)
+      })
+    } else log(`无法读取此RSS地址, ${err}`)
+  })
+}
 function ls() {
   const index = getConfig()
   if (Object.keys(index).length > 0) {
@@ -19,7 +40,7 @@ function add(rss) {
     return
   }
   const { host } = url.parse(rss, true)
-  parser(rss, (err, parsed) => {
+  parseURL(rss, (err, parsed) => {
     if (!err) {
       const { entries, feedUrl, title, description } = parsed.feed
       const { host } = url.parse(feedUrl, true)
@@ -58,29 +79,7 @@ function help() {
             add http://xxx/rss       添加RSS源
             del {index}              删除index对应RSS源
             {index}                  阅读index对应RSS源
-                                     打印此帮助信息
-`)
-}
-function get(number) {
-  if (!/^\d+$/.test(number)) {
-    log(`请输入index number`)
-    return
-  }
-  const index = getConfig()
-  if (Object.keys(index).length - 1 < number) {
-    log(`请输入正确的index number`)
-    return
-  }
-  const { feedUrl } = index[Object.keys(index)[number]]
-  parser(feedUrl, (err, parsed) => {
-    if (!err) {
-      const { entries } = parsed.feed
-      entries.forEach((i, idx) => {
-        log(`${idx + 1}  ${i.title} `)
-        log(`> ${i.link} `)
-      })
-    } else log(`无法读取此RSS地址, ${err}`)
-  })
+                                     打印此帮助信息`)
 }
 function log(str) {
   console.log(str.brightCyan)
@@ -97,13 +96,4 @@ function getConfig() {
     readFileSync(path.join(__dirname, `./rss.json`), 'utf8', true),
   )
 }
-
-module.exports = {
-  ls: ls,
-  add: add,
-  del: del,
-  help: help,
-  get: get,
-  log: log,
-  getConfig: getConfig,
-}
+module.exports = { get, ls, add, del, help }
