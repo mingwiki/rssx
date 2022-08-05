@@ -1,0 +1,12 @@
+{
+  "name": "rssx",
+  "version": "1.0.0",
+  "description": "命令行查看管理订阅RSS Feeds",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
