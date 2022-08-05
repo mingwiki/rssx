@@ -74,12 +74,12 @@ function del(number) {
 }
 function help() {
   log(`
-  rss/rssx {options} {args}
-            ls                       列出当前RSS源
-            add http://xxx/rss       添加RSS源
-            del {index}              删除index对应RSS源
-            {index}                  阅读index对应RSS源
-                                     打印此帮助信息`)
+  rss(x)                           打印此帮助信息
+  rss(x)  ls                       列出当前RSS源
+  rss(x)  add http://xxx/rss       添加RSS源
+  rss(x)  del {index}              删除index对应RSS源
+  rss(x)  {index}                  阅读index对应RSS源
+  `)
 }
 function log(str) {
   console.log(str.brightCyan)
