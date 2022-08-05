@@ -1,6 +1,6 @@
 {
   "name": "rssx",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "命令行查看管理订阅RSS Feeds",
   "main": "index.js",
   "bin": {
