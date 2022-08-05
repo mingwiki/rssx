@@ -48,7 +48,7 @@ function add(rss) {
       const channel = findChannel(new XMLParser().parse(res.data))
         .filter((i) => i)
         .flat()[0]
-      const { title, description } = channel
+      const { title, description, subtitle } = channel
       const index = getConfig()
       index[host] = { title, rss }
       writeFileSync(
@@ -56,7 +56,7 @@ function add(rss) {
         JSON.stringify(index),
         (err) => log(err),
       )
-      log(`${title}: ${description}`)
+      log(`${title}: ${description || subtitle}`)
     })
     .catch((error) => log(`无法读取此RSS地址${error}`))
 }
@@ -66,7 +66,7 @@ function del(number) {
     return
   }
   const index = getConfig()
-  if (Object.keys(index).length < number) {
+  if (Object.keys(index).length - 1 < number) {
     log(`请输入正确的index number`)
     return
   }
@@ -95,7 +95,15 @@ function help() {
 `)
 }
 function get(number) {
+  if (!/^\d+$/.test(number)) {
+    log(`请输入index number`)
+    return
+  }
   const index = getConfig()
+  if (Object.keys(index).length - 1 < number) {
+    log(`请输入正确的index number`)
+    return
+  }
   const { rss } = index[Object.keys(index)[number]]
   const { host } = url.parse(rss, true)
   axios
